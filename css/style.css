@@ -89,6 +89,13 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 1.1rem;
+    transition: all 0.25s ease;
+}
+
+.btn-icon:hover {
+    border-color: var(--accent-teal);
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .icon-svg {
@@ -106,6 +113,13 @@ body {
     border-radius: 20px;
     font-weight: 700;
     cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-pill-subtle:hover {
+    background: var(--accent-teal);
+    color: #FFFFFF;
+    border-color: var(--accent-teal);
 }
 
 .logo-script {
@@ -414,16 +428,33 @@ input:checked + .slider:before {
     width: 100%;
 }
 
-.btn-black {
+/* BOTÕES COM HOVER E TRANSIÇÃO */
+.btn-black, 
+.btn-black-full {
     background-color: var(--btn-black-bg);
     color: var(--btn-black-text);
-    border: none;
+    border: 2px solid transparent;
     padding: 16px 24px;
     font-size: 1rem;
     font-weight: 700;
     border-radius: 12px;
     cursor: pointer;
     text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-black:hover, 
+.btn-black-full:hover {
+    background-color: var(--accent-teal);
+    color: #FFFFFF;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(13, 148, 136, 0.35);
+}
+
+.btn-black:active, 
+.btn-black-full:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(13, 148, 136, 0.2);
 }
 
 .compliance-text {
@@ -490,6 +521,7 @@ input:checked + .slider:before {
     border: 1px solid var(--card-border);
     background: var(--card-bg);
     cursor: pointer;
+    transition: all 0.25s ease;
 }
 
 .office-item:hover, .office-item.selected {
@@ -621,6 +653,12 @@ input:checked + .slider:before {
     font-weight: 700;
     font-size: 1rem;
     cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.btn-teal-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.4);
 }
 
 /* OUTRAS SEÇÕES E PLANOS */
@@ -641,17 +679,6 @@ input:checked + .slider:before {
     background: var(--input-bg);
     color: var(--text-dark);
     margin-bottom: 16px;
-}
-
-.btn-black-full {
-    width: 100%;
-    background: var(--btn-black-bg);
-    color: var(--btn-black-text);
-    border: none;
-    padding: 16px;
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    cursor: pointer;
 }
 
 .plans-header {
@@ -675,6 +702,7 @@ input:checked + .slider:before {
     border-radius: 20px;
     font-weight: 700;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .tab-btn.active {
@@ -696,6 +724,12 @@ input:checked + .slider:before {
     border: 1px solid var(--card-border);
     padding: 32px;
     position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-soft);
 }
 
 .plan-card.featured {
@@ -729,11 +763,23 @@ input:checked + .slider:before {
     font-weight: 700;
     cursor: pointer;
     width: 100%;
+    transition: all 0.25s ease;
+}
+
+.btn-plan-action:hover {
+    background: var(--accent-teal);
+    color: #FFFFFF;
+    border-color: var(--accent-teal);
 }
 
 .btn-plan-action.primary {
     background: var(--btn-black-bg);
     color: var(--btn-black-text);
+}
+
+.btn-plan-action.primary:hover {
+    background: var(--accent-teal);
+    color: #FFFFFF;
 }
 
 /* ==========================================
