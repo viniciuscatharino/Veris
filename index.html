@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veris - Direito ao Ponto</title>
+    
+    <!-- Fontes Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Estilos Locais -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- CABEÇALHO GLOBAL -->
+    <header class="main-header">
+        <div class="header-left">
+            <button id="menu-toggle" class="btn-icon" title="Abrir Menu">☰</button>
+            <button onclick="switchView('view-client-register')" class="btn-pill-subtle">Formulário</button>
+        </div>
+        
+        <div class="header-center">
+            <span class="logo-script" onclick="switchView('view-home')">Veris</span>
+        </div>
+        
+        <div class="header-right">
+            <!-- Botão de Tema (SVG da Lua) -->
+            <button id="theme-toggle" class="btn-icon" title="Alternar Tema" onclick="toggleTheme()">
+                <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+            </button>
+            
+            <select id="language-select" class="lang-select">
+                <option value="pt-br">🇧🇷 PT-BR ▾</option>
+            </select>
+
+            <!-- Botão de Notificações (SVG do Chat) -->
+            <button class="btn-icon" title="Notificações" onclick="showNotifications()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+            </button>
+
+            <!-- Botão de Configurações (SVG da Engrenagem) -->
+            <button class="btn-icon" title="Configurações" onclick="openSettings()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- MENU LATERAL ESQUERDO -->
+    <aside id="sidebar" class="sidebar hidden">
+        <div class="sidebar-header">
+            <div class="logo-sidebar">
+                <span class="logo-script-sm">Veris.AI</span>
+                <span class="badge-enterprise">ENTERPRISE</span>
+            </div>
+            <button id="menu-close" class="btn-close">&times;</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" onclick="switchView('view-home')">Início (Apresentação)</a>
+            <a href="#" onclick="switchView('view-app')">Dashboard / Mapa</a>
+            <a href="#" onclick="switchView('view-client-register')">Cadastro de Cliente</a>
+            <a href="#" onclick="switchView('view-lawyer-register')">Validação de Advogado</a>
+            <a href="#" onclick="switchView('view-plans')">Planos de Assinatura</a>
+        </nav>
+    </aside>
+
+    <!-- PAINEL LATERAL DIREITO -->
+    <aside id="right-drawer" class="right-drawer hidden">
+        <div class="drawer-header">
+            <h3 id="drawer-title" class="drawer-title">Notificações</h3>
+            <button class="btn-close" onclick="closeRightDrawer()">&times;</button>
+        </div>
+        
+        <div class="drawer-body">
+            <div id="drawer-notifications-content" class="drawer-section">
+                <ul class="notification-list">
+                    <li class="notification-item unread">
+                        <div class="notification-head">
+                            <span class="notification-title">Chat Seguro Ativo</span>
+                            <span class="notification-time">Agora</span>
+                        </div>
+                        <p class="notification-desc">O seu canal de comunicação encriptado E2EE foi estabelecido com sucesso.</p>
+                    </li>
+                    <li class="notification-item">
+                        <div class="notification-head">
+                            <span class="notification-title">Agendamento Confirmado</span>
+                            <span class="notification-time">Há 2 horas</span>
+                        </div>
+                        <p class="notification-desc">Consulta marcada com Camfella e Amato Advogados.</p>
+                    </li>
+                    <li class="notification-item">
+                        <div class="notification-head">
+                            <span class="notification-title">Anonimização LGPD</span>
+                            <span class="notification-time">Ontem</span>
+                        </div>
+                        <p class="notification-desc">Os seus dados pessoais foram protegidos de acordo com a Lei 13.709/18.</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="drawer-settings-content" class="drawer-section hidden">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Tema de Apresentação</span>
+                        <span class="setting-sub">Alternar entre o modo claro e escuro</span>
+                    </div>
+                    <button class="btn-pill-subtle" onclick="toggleTheme()">Alternar</button>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Notificações por Email</span>
+                        <span class="setting-sub">Receber atualizações do processo</span>
+                    </div>
+                    <label class="switch-toggle">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Proteção de Dados (LGPD)</span>
+                        <span class="setting-sub">Filtro automático de CPF/CNPJ</span>
+                    </div>
+                    <span class="status-badge-active">Ativado</span>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Conformidade OAB</span>
+                        <span class="setting-sub">Provimento 205/2021 OAB</span>
+                    </div>
+                    <span class="status-badge-active">Conforme</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div id="drawer-overlay" class="drawer-overlay hidden" onclick="closeRightDrawer()"></div>
+
+    <main id="app-container">
+
+        <!-- VIEW 1: LANDING PAGE -->
+        <section id="view-home" class="view-screen active">
+            <div class="landing-grid">
+                <div class="landing-left">
+                    <div class="brand-header">
+                        <h1 class="logo-script-large">Veris</h1>
+                        <p class="tagline">Direito ao ponto.</p>
+                    </div>
+
+                    <div class="action-buttons-stack">
+                        <button onclick="switchView('view-app')" class="btn-black">Busco um Advogado</button>
+                        <button onclick="switchView('view-lawyer-register')" class="btn-black">Sou Advogado</button>
+                    </div>
+
+                    <div class="compliance-text">
+                        <p>
+                            A <strong>Veris</strong> é uma ferramenta tecnológica de conexão e facilitação de comunicação. Não somos um escritório de advocacia, não intermediamos honorários e não realizamos captação de clientes, operando em conformidade com o <strong>Provimento 205/2021 da OAB</strong> e a <strong>Constituição Federal (Art. 133)</strong>. Os conteúdos gerados por IA são meramente informativos e não constituem consultoria jurídica formal. Proteção de dados garantida pela <strong>LGPD (Lei 13.709/18)</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="landing-right">
+                    <div class="image-card">
+                        <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=800" alt="Estátua da Justiça" class="justice-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: DASHBOARD PRINCIPAL -->
+        <section id="view-app" class="view-screen">
+            <div class="dashboard-grid">
+                <div id="map" class="map-card"></div>
+                
+                <div class="offices-card">
+                    <h2 class="section-title">Escritórios em destaque:</h2>
+                    <ul id="office-list" class="office-list"></ul>
+                </div>
+
+                <div id="office-detail-card" class="detail-card">
+                    <div class="carousel-section">
+                        <div class="carousel-header-title">
+                            <span>🏢 Fachada e Ambientes Interiores (Google Maps / Instalações Reais)</span>
+                        </div>
+                        <div id="photo-carousel" class="photo-carousel"></div>
+                    </div>
+
+                    <div class="detail-content-row">
+                        <div class="detail-info">
+                            <div class="detail-badge" id="detail-badge">★ 5.0 (Mais bem avaliado)</div>
+                            <h3 id="detail-name">Bortolotto Advocacia & Consultoria</h3>
+                            <p id="detail-oab" class="sub-text">OAB/SP nº 14.280 • Centro, São Carlos - SP</p>
+                            <p id="detail-desc" class="desc-text">Especializados em Direito do Consumidor, Trabalhista e Família.</p>
+                        </div>
+                        <div class="detail-actions">
+                            <button class="btn-teal-action" onclick="alert('A iniciar canal de comunicação seguro...')">Iniciar Chat Seguro (E2EE)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: CADASTRO DO CLIENTE -->
+        <section id="view-client-register" class="view-screen">
+            <div class="form-container">
+                <h2>Crie sua conta gratuita</h2>
+                <p class="form-subtitle">Encontre o advogado ideal perto de você em poucos passos.</p>
+                
+                <form id="client-form" onsubmit="event.preventDefault(); switchView('view-app');">
+                    <div class="form-group">
+                        <input type="text" placeholder="Insira seu nome completo" required class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" placeholder="Insira seu email" required class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" placeholder="Insira seu telefone (WhatsApp)" required class="input-field">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="Crie uma senha" required class="input-field">
+                    </div>
+
+                    <button type="submit" class="btn-black-full">Cadastrar e Continuar</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- VIEW 4: VALIDAÇÃO DO ADVOGADO -->
+        <section id="view-lawyer-register" class="view-screen">
+            <div class="lawyer-grid">
+                <div class="lawyer-form-card">
+                    <h3>Dados do Profissional</h3>
+                    <form id="lawyer-form" onsubmit="event.preventDefault(); switchView('view-plans');">
+                        <div class="form-group">
+                            <input type="text" placeholder="Insira seu nome completo" required class="input-field">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" placeholder="Número da OAB" required class="input-field">
+                        </div>
+                        <button type="submit" class="btn-black-full">Avançar para Planos</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 5: PLANOS DE ASSINATURA -->
+        <section id="view-plans" class="view-screen">
+            <div class="plans-header">
+                <h2>Escolha o plano ideal para você</h2>
+                <div class="cycle-tabs">
+                    <button class="tab-btn" onclick="setCycle(1, this)">1 Mês</button>
+                    <button class="tab-btn active" onclick="setCycle(3, this)">3 Meses</button>
+                    <button class="tab-btn" onclick="setCycle(6, this)">6 Meses</button>
+                    <button class="tab-btn" onclick="setCycle(12, this)">12 Meses</button>
+                </div>
+            </div>
+
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <h3>Start</h3>
+                    <div class="plan-price" id="price-start">R$ 59,90<span>/mês</span></div>
+                    <button class="btn-plan-action" onclick="alert('Plano Start Selecionado!')">Escolher assinatura</button>
+                </div>
+                <div class="plan-card featured">
+                    <span class="badge-pop">MAIS POPULAR</span>
+                    <h3>Pro</h3>
+                    <div class="plan-price" id="price-pro">R$ 129,90<span>/mês</span></div>
+                    <button class="btn-plan-action primary" onclick="alert('Plano Pro Selecionado!')">Escolher assinatura</button>
+                </div>
+                <div class="plan-card">
+                    <h3>Enterprise</h3>
+                    <div class="plan-price" id="price-enterprise">R$ 239,90<span>/mês</span></div>
+                    <button class="btn-plan-action" onclick="alert('Plano Enterprise Selecionado!')">Escolher assinatura</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
