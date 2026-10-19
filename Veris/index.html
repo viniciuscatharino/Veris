@@ -22,7 +22,7 @@
     <header class="main-header">
         <div class="header-left">
             <button id="menu-toggle" class="btn-icon" title="Abrir Menu">☰</button>
-            <button onclick="switchView('view-home')" class="btn-pill-subtle">Formulário</button>
+            <button onclick="switchView('view-client-register')" class="btn-pill-subtle">Formulário</button>
         </div>
         
         <div class="header-center">
@@ -30,18 +30,35 @@
         </div>
         
         <div class="header-right">
-            <!-- Botão de Alternância de Tema Escuro / Claro -->
-            <button id="theme-toggle" class="btn-icon" title="Alternar Tema" onclick="toggleTheme()">🌙</button>
+            <!-- Botão de Tema (SVG da Lua) -->
+            <button id="theme-toggle" class="btn-icon" title="Alternar Tema" onclick="toggleTheme()">
+                <svg id="theme-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+            </button>
             
             <select id="language-select" class="lang-select">
                 <option value="pt-br">🇧🇷 PT-BR ▾</option>
             </select>
-            <button class="btn-icon" title="Notificações">💬</button>
-            <button class="btn-icon" title="Configurações">⚙️</button>
+
+            <!-- Botão de Notificações (SVG do Chat) -->
+            <button class="btn-icon" title="Notificações" onclick="showNotifications()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+            </button>
+
+            <!-- Botão de Configurações (SVG da Engrenagem) -->
+            <button class="btn-icon" title="Configurações" onclick="openSettings()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-svg">
+                    <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+            </button>
         </div>
     </header>
 
-    <!-- MENU LATERAL (SIDEBAR) -->
+    <!-- MENU LATERAL ESQUERDO -->
     <aside id="sidebar" class="sidebar hidden">
         <div class="sidebar-header">
             <div class="logo-sidebar">
@@ -58,6 +75,81 @@
             <a href="#" onclick="switchView('view-plans')">Planos de Assinatura</a>
         </nav>
     </aside>
+
+    <!-- PAINEL LATERAL DIREITO -->
+    <aside id="right-drawer" class="right-drawer hidden">
+        <div class="drawer-header">
+            <h3 id="drawer-title" class="drawer-title">Notificações</h3>
+            <button class="btn-close" onclick="closeRightDrawer()">&times;</button>
+        </div>
+        
+        <div class="drawer-body">
+            <div id="drawer-notifications-content" class="drawer-section">
+                <ul class="notification-list">
+                    <li class="notification-item unread">
+                        <div class="notification-head">
+                            <span class="notification-title">Chat Seguro Ativo</span>
+                            <span class="notification-time">Agora</span>
+                        </div>
+                        <p class="notification-desc">O seu canal de comunicação encriptado E2EE foi estabelecido com sucesso.</p>
+                    </li>
+                    <li class="notification-item">
+                        <div class="notification-head">
+                            <span class="notification-title">Agendamento Confirmado</span>
+                            <span class="notification-time">Há 2 horas</span>
+                        </div>
+                        <p class="notification-desc">Consulta marcada com Camfella e Amato Advogados.</p>
+                    </li>
+                    <li class="notification-item">
+                        <div class="notification-head">
+                            <span class="notification-title">Anonimização LGPD</span>
+                            <span class="notification-time">Ontem</span>
+                        </div>
+                        <p class="notification-desc">Os seus dados pessoais foram protegidos de acordo com a Lei 13.709/18.</p>
+                    </li>
+                </ul>
+            </div>
+
+            <div id="drawer-settings-content" class="drawer-section hidden">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Tema de Apresentação</span>
+                        <span class="setting-sub">Alternar entre o modo claro e escuro</span>
+                    </div>
+                    <button class="btn-pill-subtle" onclick="toggleTheme()">Alternar</button>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Notificações por Email</span>
+                        <span class="setting-sub">Receber atualizações do processo</span>
+                    </div>
+                    <label class="switch-toggle">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Proteção de Dados (LGPD)</span>
+                        <span class="setting-sub">Filtro automático de CPF/CNPJ</span>
+                    </div>
+                    <span class="status-badge-active">Ativado</span>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-name">Conformidade OAB</span>
+                        <span class="setting-sub">Provimento 205/2021 OAB</span>
+                    </div>
+                    <span class="status-badge-active">Conforme</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div id="drawer-overlay" class="drawer-overlay hidden" onclick="closeRightDrawer()"></div>
 
     <main id="app-container">
 
@@ -90,29 +182,22 @@
             </div>
         </section>
 
-        <!-- VIEW 2: DASHBOARD PRINCIPAL (MAPA + ESCRITÓRIOS REAIS) -->
+        <!-- VIEW 2: DASHBOARD PRINCIPAL -->
         <section id="view-app" class="view-screen">
             <div class="dashboard-grid">
-                <!-- Mapa Interativo -->
                 <div id="map" class="map-card"></div>
                 
-                <!-- Lista de Escritórios na Barra Lateral -->
                 <div class="offices-card">
                     <h2 class="section-title">Escritórios em destaque:</h2>
-                    <ul id="office-list" class="office-list">
-                        <!-- Inserido dinamicamente via JavaScript -->
-                    </ul>
+                    <ul id="office-list" class="office-list"></ul>
                 </div>
 
-                <!-- Painel Inferior de Detalhes com Carrossel de Fotos de Fachada e Interior -->
                 <div id="office-detail-card" class="detail-card">
                     <div class="carousel-section">
                         <div class="carousel-header-title">
                             <span>🏢 Fachada e Ambientes Interiores (Google Maps / Instalações Reais)</span>
                         </div>
-                        <div id="photo-carousel" class="photo-carousel">
-                            <!-- Fotos renderizadas via JavaScript -->
-                        </div>
+                        <div id="photo-carousel" class="photo-carousel"></div>
                     </div>
 
                     <div class="detail-content-row">
@@ -209,7 +294,6 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <!-- Aplicação Principal -->
     <script src="js/app.js"></script>
 </body>
 </html>
